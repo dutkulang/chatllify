@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+<div class="all-personal-messages-content">
+
+    <h2>{{ user.name }} X {{ friend.name }}</h2>
+
+    <div class="messages-container">
+        <div class="send-group-message">
+
+            <form id="send-message" action="" >
+                {% csrf_token %}
+                <input type="hidden" name="friend_username" id="friend_username" value="{{ friend.name }}">
+                <input type="text" class="message-body" name="message" id="message_body">
+                <input type="submit" class="message-submit" value="submit">
+            </form>
+         
+        </div>
+    </div>
+
+    <div id="friend-user-messages-all">
+        <!-- {% if 'John' == request.user.username %}
+            <div class='sender-class'>
+                <div class='left'><img src='{% static 'Images/images.jpg' %}'></div>
+                <div class='right'>These days i dont feel like me or do you feel like you buddy?</div>
+            </div>
+        {% else %}
+            <div class='reciever-class'>
+                <div class='left'>These days i dont feel like me or do you feel like you buddy?</div>
+                <div class='right'><img src='{% static 'Images/images.jpg' %}' ></div>
+            </div>
+        {% endif %} -->
+    </div>
+
+    <script>
+        $(document).ready(function(){
+        
+        setInterval(function(){
+            $.ajax({
+                type: 'GET',
+                url : "/retrieve_personal_messages/{{ friend.name }}",
+                success: function(response){
+                    console.log(response);
+                    $("#friend-user-messages-all").empty();
+                    for (var key in response.messages)
+                    {
+                        if( response.messages[key].sender_id == "{{ user.id }}")
+                        {
+                            var temp="<div class='sender-class'><div class='left'><img src='{% static 'Images/images.jpg' %}'></div><div class='right'>"+response.messages[key].message_body+"</div></div>";
+                        }
+                        else{
+                            var temp="<div class='reciever-class'><div class='left'>"+response.messages[key].message_body+"</div><div class='right'><img src='{% static 'Images/images.jpg' %}' ></div></div>";
+                        }
+                        // var temp="{% if message_sender == request.user.id %}<div class='sender-class'><div class='left'><img src='{% static 'Images/images.jpg' %}'></div><div class='right'>"+response.messages[key].message_body+"</div></div>{% else %}<div class='reciever-class'><div class='left'>"+response.messages[key].message_body+"</div><div class='right'><img src='{% static 'Images/images.jpg' %}' ></div></div>{% endif %}";
+                        $("#friend-user-messages-all").append(temp);
+                    }
+                },
+                error: function(response){
+                    // alert('An error occured')
+                }
+            });
+        },1000);
+        })
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).on('submit','#send-message',function(e){
+        e.preventDefault();
+    
+        $.ajax({
+            type:'POST',
+            url:'/store_personal_messages',
+            data:{
+                friend_username:$('#friend_username').val(),
+                message_body:$('#message_body').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function(data){
+            //alert(data)
+            }
+        });
+        document.getElementById('message_body').value = ''
+        });
+    </script>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+<img src="https://img.icons8.com/material-outlined/24/000000/chevron-left.png"/>
+
+<img src="https://img.icons8.com/material-rounded/24/000000/arrow-pointing-left.png"/>
+
+<img src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+
+<img src="https://img.icons8.com/wired/64/000000/chevron-down.png"/>
+
+<img src="https://img.icons8.com/ios/50/000000/messages-mac.png"/>
+
+<img src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+
+<img src="https://img.icons8.com/glyph-neue/256/000000/plus.png"/>
+
+<img src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/000000/external-arrow-upper-right-arrows-flatart-icons-outline-flatarticons.png"/>
+ -->

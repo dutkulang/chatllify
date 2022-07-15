@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="settings-page">
+
+    <div class="all">
+        <div class="left">
+            <img src="{% static 'Images/images.jpg' %}" alt="">
+        </div>
+    
+        <div class="right">
+            <div class="username">{{ user.name }}</div>
+            <div class="user-about">About :  " {{ user.about }} "</div>
+            <div class="other-info">
+                <span>{{ user.user_friends.count }} friends</span>
+                <span>Joined {{ user.date_joined|timesince }} ago</span>
+                <span>{{ groups }} groups joined</span>
+            </div>
+            <div class="edit-delete">
+                <div><form action="" method="post">{% csrf_token %}<button>Edit</button></form></div>
+                <div><button>Delete account</button></div>
+            </div>
+            
+        </div>  
+    </div>
+    
+    <div class="update-account">
+        {% if updatable %}
+            <form action="/update_profile" method="post">
+                {% csrf_token %}
+                change profile picture:
+                <input type="file" name="profile_picture" id="update-profile-picture">
+                <br><br>
+                change username:
+                <br><br>
+                <input type="text" name="username" id="">
+                <br><br>
+                change email:
+                <br><br>
+                <input type="email" name="email" id="">
+                <br><br>
+                change about:
+                <br><br>
+                <input type="text" name="about" id="">
+                <br><br>
+                update password:
+                <br><br>
+                <input type="password" name="password" id="">
+                <br><br>
+                <input class="submit-update" type="submit" value="update">
+                <br><br>
+            </form>
+        {% endif %}
+    </div>
+
+</div>
+
+
+{% endblock %}
+

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="userquerypage">
+        
+    <form action="{% url 'all_friends' %}" method="get">
+        <input type="text" name="q" placeholder="search username...">
+        <input class="submit-query" type="submit" value="search" >
+    </form>
+
+
+    {% if query_track %}
+        <h2>SEARCH RESULTS</h2>
+    {% else %}
+        <h2>MY FRIENDS</h2>
+    {% endif %}
+
+    {% for user in all_users %}
+
+        {% if query_track %}
+
+        <div class="all-users">
+            <div class="left"><img src="{% static 'Images/images.jpg' %}" alt=""></div>
+            <div class="center">
+                <span class="name">{{ user.name }}</span>
+                <br>
+                <i>"{{ user.about }}"</i>
+                <br>
+                <span><i>{{ user.user_friends.all.count }} following</i></span>
+            </div>
+            {% if user in current_user_friends %}
+                <div class="right">
+                    <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                    <br>
+                    <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+                </div>
+            {% else %}
+                <div class="right">
+                    <img class="add" src="https://img.icons8.com/glyph-neue/256/000000/plus.png"/>
+                </div>
+            {% endif %}
+        </div>
+        <br>
+        {% else %}
+
+        <div class="all-users">
+            <div class="left"><img src="{% static 'Images/images.jpg' %}" alt=""></div>
+            <div class="center">
+                <span class="name">{{ user.profile.name }}</span>
+                <br>
+                <i>{{ user.profile.about }}</i>
+                <br>
+                <span><i>{{ user.profile.user_friends.all.count }} following</i></span>
+            </div>
+            <div class="right">
+                <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                <br>
+                <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+            </div>
+        </div>
+        <br>
+        
+        {% endif %}
+
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+

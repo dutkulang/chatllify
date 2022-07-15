@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="signing-pages">
+    <h2>Sign In</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        Username
+        <br>
+        <input type="text" name="username" >
+        <br>
+        Password
+        <br>
+        <input type="password" name="password" >
+        <br>
+        <input class="submit-signing" type="submit" value="sign in">
+    </form>
+</div>
+
+{% endblock %}

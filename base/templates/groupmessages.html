@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+<div class="groupmessages">
+  <div>
+    <h2>{{ group.title }}</h2>
+    <p>{{ group.participants.all.count }} participants</p>
+  </div>
+  
+  
+  <div id="all-messages">
+    
+    <!-- <div class="messages-and-images">
+      <div class="left">
+          <img src="{% static 'Images/images.jpg' %}" alt="">
+      </div>
+      <div class="right">
+        Data structures and algorithms are among the most fundamental concepts of Computer Science. Whether it’s 
+        real-world problems you’re trying to solve or the typical coding question asked in an interview
+      </div>
+    </div> -->
+
+  </div>
+  
+  <script>
+    $(document).ready(function(){
+    
+    setInterval(function(){
+        $.ajax({
+            type: 'GET',
+            url : "/return_group_messages/{{ group_id }}",
+            success: function(response){
+                console.log(response);
+                $("#all-messages").empty();
+                for (var key in response.group_messages)
+                {
+                    var temp="<div class='messages-and-images'><div class='left'><img src='{% static 'Images/images.jpg' %}'></div><div class='right'>"+response.group_messages[key].message_body+"</div></div>";
+                    $("#all-messages").append(temp);
+                }
+            },
+            error: function(response){
+                alert('An error occured')
+            }
+        });
+    },1000);
+    })
+  </script>
+
+  
+  <div class="send-group-message">
+
+      <form id="submit-message">
+          {% csrf_token %}
+          <input type="hidden" name="user" id="user" value="{{ user }}">
+          <input type="hidden" name="group_id" id="group_id" value="{{ group_id }}">
+          <input class="message-body" type="text" name="message_body" id="message_body" >
+          <input class="message-submit" type="submit" value="send">
+      </form>
+  
+  </div>
+  
+  <script type="text/javascript">
+      $(document).on('submit','#submit-message',function(e){
+        e.preventDefault();
+    
+        $.ajax({
+          type:'POST',
+          url:'/store_group_message',
+          data:{
+              user:$('#user').val(),
+              group_id:$('#group_id').val(),
+              message_body:$('#message_body').val(),
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function(data){
+             //alert(data)
+          }
+        });
+        document.getElementById('message_body').value = ''
+      });
+  </script>
+    
+  
+  <!-- <div>
+    <button>leave group</button>
+  </div> -->
+  
+</div>
+
+{% endblock %}
+

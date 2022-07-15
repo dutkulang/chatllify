@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="signing-pages">
+    <h2>Sign Up</h2>
+    <form action="" method="post">
+
+        {% csrf_token %}
+
+        {% for forms in form %}
+            {{ forms.label }}
+            <br>
+            {{ forms }}
+            <br>
+        {% endfor %}
+        <span>Confirm Password</span>
+        <br>
+        <input type="text" name="confirm_password" >
+        <br>
+        <input class="submit-signing" type="submit" value="sign up">
+
+    </form>
+</div>
+
+{% endblock %}

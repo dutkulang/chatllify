@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="all-homepage-contents">
+
+    <div class="right-section">
+
+        <div class="top-section">
+            <div class="profile-image">
+                <img src="{% static 'Images/images.jpg' %}" alt="">
+            </div>
+            <div class="profile-content">
+                <span class="name">{{user.name}}</span>
+                <br>
+                <span>"{{user.about}}"</span>
+            </div>
+        </div>
+        
+        <div class="lower-section">
+            <h2>RECENT MESSAGES</h2>
+           <div class="all-messages">
+                 {% for message in messages %}
+                    <div class="my-messages">
+                        <div class="my-messages-left">
+                            <img src="{% static 'Images/images.jpg' %}" alt="">
+                        </div>
+
+                        <div class="my-messages-center">
+                            <span class="users">{{ message.sender.name }} <span><i>@{{ message.time|timesince }} ago</i></span> {{ message.reciever.name }}</span>
+                            <br>
+                            <span class="message">{{ message.message_body }}</span>
+                        </div>
+                        
+                        <div class="my-messages-right">
+                            {% if message.sender.name != request.user.username %}
+                                <img class="reply" src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/000000/external-arrow-upper-right-arrows-flatart-icons-outline-flatarticons.png"/>
+                            {% endif %}
+                        </div>
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <img class="directions" src="https://img.icons8.com/wired/64/000000/chevron-down.png"/>
+        </div>
+    </div>
+
+    <div class="left-section">
+
+        <div class="all">
+
+            <div class="friends">
+                <h2>FRIENDS</h2>
+                {% for friend in user.user_friends.all %}
+                    <div class="all-friends">
+                        <div class="left"><img src="{% static 'Images/images.jpg' %}" alt=""></div>
+                        <div class="center">
+                            {{ friend.profile.name }}
+                            <br>
+                            <span><i>{{ friend.profile.user_friends.all.count }} following</i></span>
+                        </div>
+                        <div class="right">
+                            <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                            <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <img class="directions" src="https://img.icons8.com/wired/64/000000/chevron-down.png"/>
+            <div class="groups">
+                <h2>GROUPS</h2>
+                    {% for group in groups %}
+                    <a href="{% url 'groups' group.id %}">
+                        <div class="all-groups">
+                            {{ group.title }}
+                            <br>
+                            <i><span>{{ group.participants.all.count }} users</span> , <span>created by : {{ group.owner.name }}</span></i>
+                        </div>
+                    </a>
+                    <br>
+                    {% endfor %}
+            </div>
+            <img class="directions" src="https://img.icons8.com/wired/64/000000/chevron-down.png"/>
+        </div>
+        
+    </div>
+
+</div>
+
+{% endblock %}
+
