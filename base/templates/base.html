@@ -13,10 +13,33 @@
     </title>
 </head>
 <body>
-    <div class="nav-bar">
-       <span>developer</span>
-       <input type="button" value="sign in">
-    </div>
+    {% if request.user.is_authenticated %}
+        <div class="nav-bar">
+            <a href="{% url 'home' %}"><span>home</span></a>
+            <a href="{% url 'all_groups' %}"><span>groups</span></a>
+            <a href="{% url 'all_friends' %}"><span>friends</span></a>
+            <a href="{% url 'settings' %}"><span>settings</span></a>
+            <a href="{% url 'signout' %}"><input type="button" value="log out"></a>
+        </div>
+
+        <div class="mobile-nav-bar">
+            <a href="{% url 'home' %}"><img  src="https://img.icons8.com/material-outlined/24/000000/home--v2.png"/></a>
+            <a href="{% url 'all_groups' %}"><img  src="https://img.icons8.com/ios-glyphs/30/000000/conference-call--v1.png"/></a>
+            <a href="{% url 'all_friends' %}"><img  src="https://img.icons8.com/ios-filled/50/000000/add-user-group-man-man--v2.png"/></a>
+            <a href="{% url 'settings' %}"><img  src="https://img.icons8.com/ios-filled/50/000000/settings.png"/></a>
+            <a href="{% url 'signout' %}"><img  src="https://img.icons8.com/sf-black/64/000000/exit.png"/></a>            
+        </div>
+    {% else %}
+        <div class="nav-bar">
+            <a href="{% url 'api' %}"><span>API</span></a>
+            <a href="{% url 'index' %}"><span>developer</span></a>
+            <a href="{% url 'index' %}"><span>snapshots</span></a>
+            <a href="{% url 'signin' %}"><input type="button" value="sign in"></a>
+        </div>
+        <div class="mobile-nav-bar">
+            log in
+        </div>
+    {% endif %}
     <div class="sub-body">
         {% block content %}
 

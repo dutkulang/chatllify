@@ -15,9 +15,13 @@ urlpatterns = [
     path('delete_group/<str:group_id>',views.delete_group, name='delete_group' ),
     path('delete_group_message/<str:message_id>',views.delete_group_message, name='delete_group_message' ),
     path('join_group/<str:group_id>',views.join_group, name='join_group'),
+    path('leave_group/<str:group_id>',views.leave_group, name='leave_group'),
 
     path('store_personal_messages', views.store_personal_messages , name='store_personal_messages'),
     path('retrieve_personal_messages/<str:friend_username>', views.retrieve_personal_messages , name='retrieve_personal_messages'),
+    path('delete_friend/<str:friend_username>',views.delete_friend , name='delete_friend'),
+    path('add_friend/<str:friend_username>',views.add_friend , name='add_friend'),
+    path('delete_personal_message/<str:message_id>',views.delete_personal_message , name='delete_personal_message'),
 
     path('update_profile', views.update_profile , name='update_profile'),
 

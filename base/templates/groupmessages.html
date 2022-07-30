@@ -12,6 +12,9 @@
     <p>{{ group.participants.all.count }} participants</p>
   </div>
   
+  {% if user not in group.participants.all %}
+      <a href="{% url 'join_group' group.id %}"><button class="add-group-or-friend">+ Join</button></a>
+  {% endif %}
   
   <div id="all-messages">
     
@@ -39,12 +42,18 @@
                 $("#all-messages").empty();
                 for (var key in response.group_messages)
                 {
-                    var temp="<div class='messages-and-images'><div class='left'><img src='{% static 'Images/images.jpg' %}'></div><div class='right'>"+response.group_messages[key].message_body+"</div></div>";
+                    if (response.group_messages[key].message_sender_id == '{{ request.user.id }}' ){
+                      var message_id = response.group_messages[key].id;
+                      var temp="<div class='messages-and-images'><div class='left'><img src='/media/profile_images/"+response.group_messages[key].message_sender_id+".jpg' %}'></div><div class='right'><span><a href='/delete_group_message/"+message_id+"'><img class='delete-message-icon-sender' src='https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png'/></a></span><br>"+response.group_messages[key].message_body+"</div></div>";
+                    }
+                    else{
+                      var temp="<div class='messages-and-images'><div class='left'><img src='/media/profile_images/"+response.group_messages[key].sender_id+".jpg' %}'></div><div class='right'>"+response.group_messages[key].message_body+"</div></div>";
+                    }
                     $("#all-messages").append(temp);
                 }
             },
             error: function(response){
-                alert('An error occured')
+                // alert('An error occured')
             }
         });
     },1000);
@@ -53,7 +62,7 @@
 
   
   <div class="send-group-message">
-
+    {% if user in group.participants.all %}
       <form id="submit-message">
           {% csrf_token %}
           <input type="hidden" name="user" id="user" value="{{ user }}">
@@ -61,7 +70,7 @@
           <input class="message-body" type="text" name="message_body" id="message_body" >
           <input class="message-submit" type="submit" value="send">
       </form>
-  
+    {% endif %}
   </div>
   
   <script type="text/javascript">

@@ -21,7 +21,7 @@
             </div>
             <div class="edit-delete">
                 <div><form action="" method="post">{% csrf_token %}<button>Edit</button></form></div>
-                <div><button>Delete account</button></div>
+                <div><a href="{% url 'delete_account' %}"><button>Delete account</button></a></div>
             </div>
             
         </div>  
@@ -29,7 +29,7 @@
     
     <div class="update-account">
         {% if updatable %}
-            <form action="/update_profile" method="post">
+            <form action="/update_profile" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 change profile picture:
                 <input type="file" name="profile_picture" id="update-profile-picture">
@@ -55,7 +55,7 @@
             </form>
         {% endif %}
     </div>
-
+    
 </div>
 
 

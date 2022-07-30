@@ -8,7 +8,7 @@
 <div class="groupsquerypage">
 
     <form action="{% url 'all_groups' %}" method="get">
-        <input type="text" name="q" placeholder="search groups...">
+        <input type="text" name="q" placeholder="search all groups...">
         <input class="submit-query" type="submit" value="search">
     </form>
 
@@ -19,23 +19,29 @@
     {% endif %}
 
     {% for groups in groups_data %}
+    
+        <a href="{% url 'groups' groups.id %}" style="text-decoration: none; color: aliceblue;">
+            <div class="group-wrapper">
+                <span class="group-title">{{ groups.title }}</span>
 
-        <div class="group-wrapper">
-            <span class="group-title">{{ groups.title }}</span>
+                <div class="group-center-elements">
+                    <i><span>created by {{ groups.owner.name }}</span> | <span>{{ groups.participants.count }} participants</span></i>
+                </div> 
 
-            <div class="group-center-elements">
-                <i><span>created by {{ groups.owner.name }}</span> | <span>{{ groups.participants.count }} participants</span></i>
-            </div> 
-
-            <div>
-                {% if user in groups.participants.all %}
-                    <button class="group-button">leave</button>
-                {% else %}
-                    <button class="group-button">join</button>
-                {% endif %}
-                <br>
+                <div>
+                    {% if user in groups.participants.all %}
+                        <a href="{% url 'leave_group' groups.id %}">
+                            <button class="group-button">leave</button>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'join_group' groups.id %}">
+                            <button class="group-button">join</button>
+                        </a>
+                    {% endif %}
+                    <br>
+                </div>
             </div>
-        </div>
+        </a>
 
     {% endfor %}
 

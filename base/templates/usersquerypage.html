@@ -7,7 +7,7 @@
 <div class="userquerypage">
         
     <form action="{% url 'all_friends' %}" method="get">
-        <input type="text" name="q" placeholder="search username...">
+        <input type="text" name="q" placeholder="Search all {{ all_profiles.count }} profiles...">
         <input class="submit-query" type="submit" value="search" >
     </form>
 
@@ -33,13 +33,19 @@
             </div>
             {% if user in current_user_friends %}
                 <div class="right">
-                    <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                    <a href="{% url 'messages' user.name %}">
+                        <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                    </a>
                     <br>
-                    <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+                    <a href="{% url 'delete_friend' user.name %}">
+                        <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+                    </a>
                 </div>
             {% else %}
                 <div class="right">
-                    <img class="add" src="https://img.icons8.com/glyph-neue/256/000000/plus.png"/>
+                    <a href="{% url 'add_friend' user.name %}">
+                        <img class="add" src="https://img.icons8.com/glyph-neue/256/000000/plus.png"/>
+                    </a>
                 </div>
             {% endif %}
         </div>
@@ -56,9 +62,13 @@
                 <span><i>{{ user.profile.user_friends.all.count }} following</i></span>
             </div>
             <div class="right">
-                <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                <a href="{% url 'messages' user.profile.name %}">
+                    <img class="chat" src="https://img.icons8.com/sf-ultralight-filled/25/000000/chat.png"/>
+                </a>
                 <br>
-                <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+                <a href="{% url 'delete_friend' user.profile.name %}">
+                    <img class="delete" src="https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png"/>
+                </a>
             </div>
         </div>
         <br>
