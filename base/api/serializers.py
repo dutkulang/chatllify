@@ -22,3 +22,4 @@ class SendPersonalMessagesSerializer(ModelSerializer):
         fields = ['sender','reciever','message_body']
 
 
+

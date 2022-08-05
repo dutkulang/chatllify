@@ -117,8 +117,6 @@ def store_personal_messages(request):
         new_message = personalmessages(sender=user,reciever=friend,message_body=message_body)
         new_message.save()
 
-    return HttpResponse('successful')
-
 def delete_personal_message(request,message_id):
     message = personalmessages.objects.get(id=message_id)
     message.delete()
@@ -157,10 +155,12 @@ def CreateGroups(request):
     new_group.save()
     new_group.participants.add(user)
 
-    # flash group created successfully
-    # redirect back to within the group
-    return HttpResponse('heres my groups')
+    return redirect(f'/groups/{new_group.id}')
 
+@login_required(login_url='/signin')
+def GroupCreationPage(request):
+
+    return render(request,'groupcreationpage.html')
 
 @login_required(login_url='/signin')
 def group_and_messages(request,group_id):
@@ -180,10 +180,6 @@ def store_group_message(request):
     if user in group.participants.all():
         new_message = groupmessages(owned_group=group,message_sender=user,message_body=message_body)
         new_message.save()
-
-        print('successful')
-    return HttpResponse('successful')
-
 
 def return_group_messages(request,group_id):
     group = groupstable.objects.get(id=group_id)

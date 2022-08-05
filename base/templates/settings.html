@@ -8,7 +8,7 @@
 
     <div class="all">
         <div class="left">
-            <img src="{% static 'Images/images.jpg' %}" alt="">
+            <img src='/media/profile_images/{{user.id}}.jpg' >
         </div>
     
         <div class="right">
@@ -20,8 +20,8 @@
                 <span>{{ groups }} groups joined</span>
             </div>
             <div class="edit-delete">
-                <div><form action="" method="post">{% csrf_token %}<button>Edit</button></form></div>
-                <div><a href="{% url 'delete_account' %}"><button>Delete account</button></a></div>
+                <div><form action="" method="post">{% csrf_token %}<button>edit</button></form></div>
+                <div><a href="{% url 'delete_account' %}"><button>delete account</button></a></div>
             </div>
             
         </div>  

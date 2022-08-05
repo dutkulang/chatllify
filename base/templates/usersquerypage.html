@@ -23,7 +23,7 @@
         {% if query_track %}
 
         <div class="all-users">
-            <div class="left"><img src="{% static 'Images/images.jpg' %}" alt=""></div>
+            <div class="left"><img src='/media/profile_images/{{user.id}}.jpg' ></div>
             <div class="center">
                 <span class="name">{{ user.name }}</span>
                 <br>
@@ -53,7 +53,7 @@
         {% else %}
 
         <div class="all-users">
-            <div class="left"><img src="{% static 'Images/images.jpg' %}" alt=""></div>
+            <div class="left"><img src='/media/profile_images/{{user.profile.id}}.jpg' ></div>
             <div class="center">
                 <span class="name">{{ user.profile.name }}</span>
                 <br>

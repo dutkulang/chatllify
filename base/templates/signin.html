@@ -11,10 +11,12 @@
         <br>
         Password
         <br>
-        <input type="password" name="password" >
+        <input type="password" name="password" required>
         <br>
         <input class="submit-signing" type="submit" value="sign in">
     </form>
+    <br>
+    <span>Don't have an account ? <a href="{% url 'signup' %}">SIGN-UP</a></span>
 </div>
 
 {% endblock %}

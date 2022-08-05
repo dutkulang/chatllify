@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="my-messages-center">
-                            <span class="users">{{ message.sender.name }}<span class="message-time-mobile"><i>@ -version</i></span> <span class="message-time"><i>@{{ message.time|timesince }} ago</i></span> {{ message.reciever.name }}</span>
+                            <span class="users">{{ message.sender.name }}<span class="message-time-mobile"><i>@{{ message.message_time_sent }}</i></span> <span class="message-time"><i>@{{ message.time|timesince }} ago</i></span> {{ message.reciever.name }}</span>
                             <br>
                             <span class="message">{{ message.message_body }}</span>
                         </div>

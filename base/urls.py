@@ -16,6 +16,8 @@ urlpatterns = [
     path('delete_group_message/<str:message_id>',views.delete_group_message, name='delete_group_message' ),
     path('join_group/<str:group_id>',views.join_group, name='join_group'),
     path('leave_group/<str:group_id>',views.leave_group, name='leave_group'),
+    path('groupcreationpage/', views.GroupCreationPage, name='groupcreationpage'),
+    path('create-group/', views.CreateGroups, name='create-group'),
 
     path('store_personal_messages', views.store_personal_messages , name='store_personal_messages'),
     path('retrieve_personal_messages/<str:friend_username>', views.retrieve_personal_messages , name='retrieve_personal_messages'),
