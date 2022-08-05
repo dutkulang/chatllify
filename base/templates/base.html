@@ -40,6 +40,16 @@
             log in
         </div>
     {% endif %}
+
+    <!-- flash messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash-messages-container">
+                <span class="flash-messages">{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="sub-body">
         {% block content %}
 

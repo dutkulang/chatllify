@@ -1,4 +1,4 @@
-from base.models import groupmessages, Profiles, personalmessages
+from base.models import groupmessages, Profiles, personalmessages, groupstable
 from rest_framework.serializers import ModelSerializer
 
 class GroupMessagesSerialiazer(ModelSerializer):
@@ -21,5 +21,8 @@ class SendPersonalMessagesSerializer(ModelSerializer):
         model = personalmessages
         fields = ['sender','reciever','message_body']
 
-
+class GroupsTableSerializer(ModelSerializer):
+    class Meta:
+        model = groupstable
+        fields = ["title","participants"]
 

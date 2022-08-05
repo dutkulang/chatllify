@@ -10,6 +10,9 @@ import os
 import numpy as np
 import cv2 as cv
 from pathlib import Path
+from django.contrib import messages
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -21,9 +24,9 @@ def index(request):
 def home(request):
     user = Profiles.objects.get(name=request.user.username)
     groups = groupstable.objects.filter(participants=user)
-    messages = personalmessages.objects.filter(Q(sender=user)|
+    my_messages = personalmessages.objects.filter(Q(sender=user)|
                                                Q(reciever=user))
-    context = {'user':user,'messages':messages[:12],'groups':groups[:4]}
+    context = {'user':user,'my_messages':my_messages[:12],'groups':groups[:4]}
 
     return render(request,'home.html',context=context)
 
@@ -37,10 +40,10 @@ def SignUp(request):
         confirm_password = request.POST.get('confirm_password')
 
         if User.objects.filter(email=email):
-            print('email exists already')
+            messages.warning(request, 'email exists already')
         else:
             if User.objects.filter(username=name):
-                print('username exists already')
+                messages.warning(request, 'username exists already')
             else:
                 if password == confirm_password:
                     new_user = User.objects.create_user(username=name,email=email,password=password)
@@ -58,11 +61,10 @@ def SignUp(request):
                     # create default profile image
                     profile_image_generator(profile.id)
 
-                    print('all actions successful....')
                     login(request, user)
                     return redirect('/home')
                 else:
-                    print('password must match')
+                    messages.warning(request, 'password must match')
 
     return render(request,'signup.html',context=context)
 
@@ -75,7 +77,7 @@ def profile_image_generator(user_id,profile_images_path=os.path.join(BASE_DIR,'m
         pass
 
 def SignIn(request):
-
+    
     if request.method=='POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -85,7 +87,7 @@ def SignIn(request):
             login(request, user_authentication)
             return redirect('/home')
         else:
-            print('Invalid username or password')
+            messages.warning(request, 'Invalid username or password')
 
     return render(request,'signin.html')
 
@@ -95,16 +97,19 @@ def signout(request):
 
 @login_required(login_url='/signin')
 def personal_messages(request,friend_username):
-
-    friend = Profiles.objects.get(name=friend_username)
-    user = Profiles.objects.get(name=request.user.username)
-    friend_profile = friends.objects.get(profile__name=friend_username)
-    
-    context = {'friend':friend,'user':user,'user':user,'friend_profile':friend_profile}
-    return render(request,'messages.html',context=context)
-
+    try:
+        friend = Profiles.objects.get(name=friend_username)
+        user = Profiles.objects.get(name=request.user.username)
+        friend_profile = friends.objects.get(profile__name=friend_username)
+        
+        context = {'friend':friend,'user':user,'user':user,'friend_profile':friend_profile}
+        return render(request,'messages.html',context=context)
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def store_personal_messages(request):
+        
     friend_username = request.POST['friend_username']
     message_body = request.POST['message_body']
 
@@ -118,25 +123,37 @@ def store_personal_messages(request):
         new_message.save()
 
 def delete_personal_message(request,message_id):
-    message = personalmessages.objects.get(id=message_id)
-    message.delete()
-    return redirect(f'/messages/{message.reciever.name}')
-
+    try:
+        message = personalmessages.objects.get(id=message_id)
+        message.delete()
+        return redirect(f'/messages/{message.reciever.name}')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
+    
 def add_friend(request,friend_username):
-    user = Profiles.objects.get(name=request.user.username)
-    attempted_friend = friends.objects.get(profile__name=friend_username)
-    user.user_friends.add(attempted_friend)
-    return redirect(f'/messages/{friend_username}')
-
+    try:
+        user = Profiles.objects.get(name=request.user.username)
+        attempted_friend = friends.objects.get(profile__name=friend_username)
+        user.user_friends.add(attempted_friend)
+        return redirect(f'/messages/{friend_username}')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
+    
 def delete_friend(request,friend_username):
-    user = Profiles.objects.get(name=request.user.username)
-    deleted_friend = friends.objects.get(profile__name=friend_username)
-    # print(deleted_friend in user.user_friends.all())
-    user.user_friends.remove(deleted_friend)
-    return redirect('/home')
+    try:
+        user = Profiles.objects.get(name=request.user.username)
+        deleted_friend = friends.objects.get(profile__name=friend_username)
+        # print(deleted_friend in user.user_friends.all())
+        user.user_friends.remove(deleted_friend)
+        return redirect('/home')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def retrieve_personal_messages(request,friend_username):
-
+        
     friend = Profiles.objects.get(name=friend_username)
     user = Profiles.objects.get(name=request.user.username)
 
@@ -149,6 +166,7 @@ def retrieve_personal_messages(request,friend_username):
 
 @login_required(login_url='/signin')
 def CreateGroups(request):
+
     user = Profiles.objects.get(name=request.user.username)
     title = request.POST.get('title')
     new_group = groupstable(owner=user,title=title)
@@ -164,14 +182,18 @@ def GroupCreationPage(request):
 
 @login_required(login_url='/signin')
 def group_and_messages(request,group_id):
-    user = Profiles.objects.get(name = request.user.username)
-    group = groupstable.objects.get(id=group_id)
-    
-    context = {'user':user,'group':group,'group_id':group_id}
-    return render(request,'groupmessages.html',context=context)
-
+    try:
+        user = Profiles.objects.get(name = request.user.username)
+        group = groupstable.objects.get(id=group_id)
+        
+        context = {'user':user,'group':group,'group_id':group_id}
+        return render(request,'groupmessages.html',context=context)
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def store_group_message(request):
+        
     user = Profiles.objects.get(name=request.user.username)
     message_body = request.POST['message_body']
     owned_group = request.POST['group_id']
@@ -182,40 +204,59 @@ def store_group_message(request):
         new_message.save()
 
 def return_group_messages(request,group_id):
-    group = groupstable.objects.get(id=group_id)
-
-    group_messages = groupmessages.objects.filter(owned_group=group)
-
-    return JsonResponse({"group_messages":list(group_messages.values())})
+    try:
+        group = groupstable.objects.get(id=group_id)
+        group_messages = groupmessages.objects.filter(owned_group=group)
+        return JsonResponse({"group_messages":list(group_messages.values())})
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def delete_group_message(request,message_id):
-    message = groupmessages.objects.get(id=message_id)
-    group_id = message.owned_group.id
-    message.delete()
-    return redirect(f'/groups/{group_id}')
+    try:
+        message = groupmessages.objects.get(id=message_id)
+        group_id = message.owned_group.id
+        message.delete()
+        return redirect(f'/groups/{group_id}')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def delete_group(request,group_id):
-    user = Profiles.objects.get(id=request.user.id)
-    group = groupstable.objects.get(id=group_id)
-    if user == group.owner:
-        group.delete()
+    try:
+        user = Profiles.objects.get(id=request.user.id)
+        group = groupstable.objects.get(id=group_id)
+        if user == group.owner:
+            group.delete()
+            return redirect('/groups')
         return redirect('/groups')
-    return redirect('/groups')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def join_group(request,group_id):
-    user = Profiles.objects.get(name=request.user.username)
-    group = groupstable.objects.get(id=group_id)
-    group.participants.add(user)
-    return redirect(f'/groups/{group_id}')
+    try:
+        user = Profiles.objects.get(name=request.user.username)
+        group = groupstable.objects.get(id=group_id)
+        group.participants.add(user)
+        return redirect(f'/groups/{group_id}')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 def leave_group(request,group_id):
-    user = Profiles.objects.get(name=request.user.username)
-    group = groupstable.objects.get(id=group_id)
-    group.participants.remove(user)
-    return redirect('/groups')
+    try:
+        user = Profiles.objects.get(name=request.user.username)
+        group = groupstable.objects.get(id=group_id)
+        group.participants.remove(user)
+        return redirect('/groups')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/home')
 
 @login_required(login_url='/signin')
 def all_groups(request):
+    
     user = Profiles.objects.get(name=request.user.username)
     groups_data = groupstable.objects.filter(participants=user)
     query_track = False
@@ -233,6 +274,7 @@ def all_groups(request):
 
 @login_required(login_url='/signin')
 def all_friends(request):
+  
     user = Profiles.objects.get(name=request.user.username)
     all_profiles = Profiles.objects.all()
     current_user_friends = [ users.profile for users in user.user_friends.all() ]
@@ -257,7 +299,7 @@ def all_friends(request):
 
 @login_required(login_url='/signin')
 def settings(request):
-    
+  
     user = Profiles.objects.get(name=request.user.username)
     groups = groupstable.objects.filter(participants=user).count()
     form = AccountSettingsForm()
@@ -278,6 +320,7 @@ def profile_image_handler(user_id,uploaded_file_name,profile_images_path=os.path
     os.rename(f'{uploaded_file_name}',f'{user_id}.jpg')
 
 def update_profile(request):
+        
     user = User.objects.get(username=request.user.username)
     profile = Profiles.objects.get(name=request.user.username)
 
@@ -315,6 +358,7 @@ def update_profile(request):
     return redirect('/settings')
 
 def delete_account(request):
+
     user = User.objects.get(id=request.user.id)
     user.delete()
     return redirect('/')

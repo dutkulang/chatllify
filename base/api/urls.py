@@ -6,6 +6,7 @@ from knox import views as knox_views
 urlpatterns = [
     (path('', views.allRoutes, name='api')),
     (path('groups/', views.allGroups, name='api-groups')),
+    (path('my-groups/', views.myGroups, name='api-my-groups')),
     (path('friends/<str:friend_name>', views.GetPersonalMessage, name='api-personalmessages')),
     (path('groups/<str:group_id>', views.specificGroup, name='api-groupmessages')),
     (path('users/', views.allUsers, name='api-allusers')),

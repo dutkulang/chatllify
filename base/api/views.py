@@ -1,8 +1,8 @@
 #from django.shortcuts import render, HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializers import GroupMessagesSerialiazer, ProfilesSerializer, PersonalMessagesSerializer, SendPersonalMessagesSerializer
-from base.models import groupmessages, Profiles, personalmessages
+from .serializers import GroupMessagesSerialiazer, ProfilesSerializer, PersonalMessagesSerializer, SendPersonalMessagesSerializer, GroupsTableSerializer
+from base.models import groupmessages, Profiles, personalmessages, groupstable
 from django.db.models import Q
 from knox.auth import AuthToken
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -12,15 +12,16 @@ from rest_framework.permissions import IsAuthenticated
 def allRoutes(request):
     routes = {
         'route - api':'/api',
-        'route - authenticate':'/api/signin',
-        'route - all groups': '/api/groups',
-        'route - all users': '/api/users',
-        'route - query specific users': '/api/users/::query',
-        'route - query specific groups': '/api/groups/::query',
-        'route - specific group messages': '/api/groups/::group_id',
-        'route - specific personal messages': '/api/friends/::friend_name',
-        'route - delete personal message': '/api/deletepersonalmessage/::message_id',
-        'route - delete group message': '/api/deletegroupmessage/::message_id',
+        'route - authenticate':'/api/signin/',
+        'route - all groups': '/api/groups/',
+        'route - my-groups': '/api/my-groups/',
+        'route - all users': '/api/users/',
+        'route - query specific users': '/api/users/::query/',
+        'route - query specific groups': '/api/groups/::query/',
+        'route - specific group messages': '/api/groups/::group_id/',
+        'route - specific personal messages': '/api/friends/::friend_name/',
+        'route - delete personal message': '/api/deletepersonalmessage/::message_id/',
+        'route - delete group message': '/api/deletegroupmessage/::message_id/',
         'route - logout':'api/signout'
     }
     return Response(routes)
@@ -40,6 +41,14 @@ def allGroups(request):
         serializer = GroupMessagesSerialiazer(groups,many=True)
         return Response(serializer.data)
     return Response('User needs to be authenticated to access this information')
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def myGroups(request):
+    user = Profiles.objects.get(name=request.user.username)
+    groups = groupstable.objects.all()
+    serializer = GroupsTableSerializer(groups,many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def specificGroup(request,group_id):
