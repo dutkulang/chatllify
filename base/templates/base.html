@@ -21,24 +21,32 @@
             <a href="{% url 'settings' %}"><span>settings</span></a>
             <a href="{% url 'signout' %}"><input type="button" value="log out"></a>
         </div>
-
-        <div class="mobile-nav-bar">
-            <a href="{% url 'home' %}"><img  src="https://img.icons8.com/material-outlined/24/000000/home--v2.png"/></a>
-            <a href="{% url 'all_groups' %}"><img  src="https://img.icons8.com/ios-glyphs/30/000000/conference-call--v1.png"/></a>
-            <a href="{% url 'all_friends' %}"><img  src="https://img.icons8.com/ios-filled/50/000000/add-user-group-man-man--v2.png"/></a>
-            <a href="{% url 'settings' %}"><img  src="https://img.icons8.com/ios-filled/50/000000/settings.png"/></a>
-            <a href="{% url 'signout' %}"><img  src="https://img.icons8.com/sf-black/64/000000/exit.png"/></a>            
+        <div class="all">
+            <div class="mobile-nav-bar">
+                <a href="{% url 'home' %}"><img  src="https://img.icons8.com/material-outlined/24/000000/home--v2.png"/></a>
+                <a href="{% url 'all_groups' %}"><img  src="https://img.icons8.com/ios-glyphs/30/000000/conference-call--v1.png"/></a>
+                <a href="{% url 'all_friends' %}"><img  src="https://img.icons8.com/ios-filled/50/000000/add-user-group-man-man--v2.png"/></a>
+                <a href="{% url 'settings' %}"><img  src="https://img.icons8.com/ios-filled/50/000000/settings.png"/></a>
+                <a href="{% url 'signout' %}"><img  src="https://img.icons8.com/sf-black/64/000000/exit.png"/></a>  
+            </div>
         </div>
+        
     {% else %}
         <div class="nav-bar">
             <a href="{% url 'api' %}"><span>API</span></a>
-            <a href="{% url 'index' %}"><span>developer</span></a>
-            <a href="{% url 'index' %}"><span>snapshots</span></a>
+            <a href="https://github.com/shurlz/chatllify"><span>developer</span></a>
+            <a href="{% url 'snapshots' %}"><span>snapshots</span></a>
             <a href="{% url 'signin' %}"><input type="button" value="sign in"></a>
         </div>
-        <div class="mobile-nav-bar">
-            log in
+        <div class="all">
+            <div class="mobile-nav-bar-landing">
+                <a href="{% url 'signin' %}"><img  src="https://img.icons8.com/sf-black/64/000000/exit.png"/></a>
+                <a href="{% url 'api' %}"><img src="https://img.icons8.com/ios-filled/50/000000/api-settings.png"/></a>
+                <a href="{% url 'snapshots' %}"><img src="https://img.icons8.com/material-sharp/24/000000/gallery.png"/></a>
+                <a href='https://github.com/shurlz/chatllify'><img src="https://img.icons8.com/ios-filled/50/000000/github.png"/></a>
+            </div>
         </div>
+        
     {% endif %}
 
     <!-- flash messages -->

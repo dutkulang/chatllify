@@ -26,6 +26,7 @@ urlpatterns = [
     path('delete_personal_message/<str:message_id>',views.delete_personal_message , name='delete_personal_message'),
 
     path('update_profile', views.update_profile , name='update_profile'),
+    path('snapshots', views.snapshots , name='snapshots'),
 
     path('signup/',views.SignUp, name='signup' ),
     path('signin/',views.SignIn, name='signin' ),

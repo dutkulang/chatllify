@@ -113,14 +113,16 @@ def store_personal_messages(request):
     friend_username = request.POST['friend_username']
     message_body = request.POST['message_body']
 
-    friend = Profiles.objects.get(name=friend_username)
-    user = Profiles.objects.get(name=request.user.username)
+    if message_body:
 
-    # checks if friend in the users friends through username .... usernames should be unique
-    friend_check = True if friend.name in [x.profile.name for x in user.user_friends.all()] else False
-    if friend_check:
-        new_message = personalmessages(sender=user,reciever=friend,message_body=message_body)
-        new_message.save()
+        friend = Profiles.objects.get(name=friend_username)
+        user = Profiles.objects.get(name=request.user.username)
+
+        # checks if friend in the users friends through username .... usernames should be unique
+        friend_check = True if friend.name in [x.profile.name for x in user.user_friends.all()] else False
+        if friend_check:
+            new_message = personalmessages(sender=user,reciever=friend,message_body=message_body)
+            new_message.save()
 
 def delete_personal_message(request,message_id):
     try:
@@ -198,10 +200,12 @@ def store_group_message(request):
     message_body = request.POST['message_body']
     owned_group = request.POST['group_id']
 
-    group = groupstable.objects.get(id=owned_group)
-    if user in group.participants.all():
-        new_message = groupmessages(owned_group=group,message_sender=user,message_body=message_body)
-        new_message.save()
+    if message_body:
+
+        group = groupstable.objects.get(id=owned_group)
+        if user in group.participants.all():
+            new_message = groupmessages(owned_group=group,message_sender=user,message_body=message_body)
+            new_message.save()
 
 def return_group_messages(request,group_id):
     try:
@@ -356,6 +360,10 @@ def update_profile(request):
         print(profile_image_handler( profile.id, new_profile_img.name))
 
     return redirect('/settings')
+
+def snapshots(request):
+
+    return render(request,'snapshots.html')
 
 def delete_account(request):
 

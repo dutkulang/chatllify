@@ -42,12 +42,12 @@
                 $("#all-messages").empty();
                 for (var key in response.group_messages)
                 {
-                    if (response.group_messages[key].message_sender_id == '{{ request.user.id }}' ){
+                    if (response.group_messages[key].message_sender_id == '{{ user.id }}' ){
                       var message_id = response.group_messages[key].id;
                       var temp="<div class='messages-and-images'><div class='left'><img src='/media/profile_images/"+response.group_messages[key].message_sender_id+".jpg' %}'></div><div class='right'><span><a href='/delete_group_message/"+message_id+"'><img class='delete-message-icon-sender' src='https://img.icons8.com/external-tulpahn-detailed-outline-tulpahn/64/000000/external-bin-mobile-user-interface-tulpahn-detailed-outline-tulpahn.png'/></a></span><br>"+response.group_messages[key].message_body+"</div></div>";
                     }
                     else{
-                      var temp="<div class='messages-and-images'><div class='left'><img src='/media/profile_images/"+response.group_messages[key].sender_id+".jpg' %}'></div><div class='right'>"+response.group_messages[key].message_body+"</div></div>";
+                      var temp="<div class='messages-and-images'><div class='left'><img src='/media/profile_images/"+response.group_messages[key].message_sender_id+".jpg' %}'></div><div class='right'>"+response.group_messages[key].message_body+"</div></div>";
                     }
                     $("#all-messages").append(temp);
                 }

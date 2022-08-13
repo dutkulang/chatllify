@@ -35,6 +35,7 @@ def signinUser(request):
     return Response({'user info':{'user_id': user.id , 'email': user.email}, 'token': token})
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def allGroups(request):
     if request.user.is_authenticated:
         groups = groupmessages.objects.all()
@@ -51,6 +52,7 @@ def myGroups(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def specificGroup(request,group_id):
     if request.user.is_authenticated:
         groups = groupmessages.objects.get(id=group_id)
@@ -66,6 +68,7 @@ def allUsers(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def SendpersonalMessage(request,username):
     if request.user.is_authenticated:
         user = Profiles.objects.get(id=request.user.id)
@@ -84,6 +87,7 @@ def SendpersonalMessage(request,username):
     return Response('User needs to be authenticated to access this information')
 
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def SendGroupMessage(request,group_id):
     if request.user.is_authenticated:
         user = Profiles.objects.get(id=request.user.id)
@@ -101,6 +105,7 @@ def SendGroupMessage(request,group_id):
     return Response('User needs to be authenticated to access this information')
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def GetPersonalMessage(request,friend_name):
     if request.user.is_authenticated:
         messages = personalmessages.objects.filter(
@@ -111,6 +116,7 @@ def GetPersonalMessage(request,friend_name):
     return Response('User needs to be authenticated to access this information')
 
 @api_view(['DELETE'])
+@permission_classes((IsAuthenticated, ))
 def deletePersonalMessage(request,message_id):
     if request.user.is_authenticated:
         message = personalmessages.objects.get(id=message_id)
@@ -119,6 +125,7 @@ def deletePersonalMessage(request,message_id):
     return Response('User needs to be authenticated to access this information')
 
 @api_view(['DELETE'])
+@permission_classes((IsAuthenticated, ))
 def deleteGroupMessage(request,message_id):
     if request.user.is_authenticated:
         message = groupmessages.objects.get(id=message_id)
