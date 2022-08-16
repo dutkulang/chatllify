@@ -1,0 +1,8 @@
+dj_database_url==1.0.0
+Django==4.0.5
+django_heroku==0.3.1
+django_rest_knox==4.2.0
+djangorestframework==3.13.1
+knox==0.1.14
+numpy==1.22.4
+opencv_contrib_python==4.6.0.66

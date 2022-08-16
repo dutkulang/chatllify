@@ -1,0 +1,1 @@
+web: gunicorn Chatllify.wsgi:application --log-file -
