@@ -22,51 +22,62 @@ def index(request):
 
 @login_required(login_url='/signin')
 def home(request):
-    user = Profiles.objects.get(name=request.user.username)
-    groups = groupstable.objects.filter(participants=user)
-    my_messages = personalmessages.objects.filter(Q(sender=user)|
-                                               Q(reciever=user))
-    context = {'user':user,'my_messages':my_messages[:12],'groups':groups[:4]}
+    try:
+        user = Profiles.objects.get(name=request.user.username)
+        groups = groupstable.objects.filter(participants=user)
+        my_messages = personalmessages.objects.filter(Q(sender=user)|
+                                                Q(reciever=user))
+        context = {'user':user,'my_messages':my_messages[:12],'groups':groups[:4]}
 
-    return render(request,'home.html',context=context)
+        return render(request,'home.html',context=context)
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/index')
 
 def SignUp(request):
-    form = ProfileForm()
-    context = {'form':form}
-    if request.method=='POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+    try:
+        form = ProfileForm()
+        context = {'form':form}
+        if request.method=='POST':
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
 
-        if User.objects.filter(email=email):
-            messages.warning(request, 'email exists already')
-        else:
-            if User.objects.filter(username=name):
-                messages.warning(request, 'username exists already')
+            if len(User.objects.filter(email=email))>0:
+                messages.warning(request, 'email exists already')
             else:
-                if password == confirm_password:
-                    new_user = User.objects.create_user(username=name,email=email,password=password)
-                    new_user.save()
-
-                    # create profile instance
-                    user = User.objects.get(email=email)
-                    new_profile = Profiles(user=user,name=name)
-                    new_profile.save()
-                    
-                    # create a friends instance 
-                    profile = Profiles.objects.get(name=name)
-                    friends.objects.create(profile=profile)
-
-                    # create default profile image
-                    profile_image_generator(profile.id)
-
-                    login(request, user)
-                    return redirect('/home')
+                if len(User.objects.filter(username=name))>0:
+                    messages.warning(request, 'username exists already')
                 else:
-                    messages.warning(request, 'password must match')
+                    if password == confirm_password:
+                        new_user = User(username=name,email=email)
+                        new_user.save()
+                        
+                        user = User.objects.get(email=email)
+                        user.set_password(password)
+                        user.save()
+                        
+                        # create profile instance
+                        new_profile = Profiles(user=user,name=name)
+                        new_profile.save()
+                        
+                        # create a friends instance 
+                        profile = Profiles.objects.get(name=name)
+                        friends.objects.create(profile=profile)
 
-    return render(request,'signup.html',context=context)
+                        # create default profile image
+                        profile_image_generator(profile.id)
+
+                        login(request, user)
+                        return redirect('/home')
+                    else:
+                        messages.warning(request, 'password must match')
+
+        return render(request,'signup.html',context=context)
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/index')
 
 def profile_image_generator(user_id,profile_images_path=os.path.join(BASE_DIR,'media/profile_images')):
     os.chdir(profile_images_path)
@@ -77,23 +88,30 @@ def profile_image_generator(user_id,profile_images_path=os.path.join(BASE_DIR,'m
         pass
 
 def SignIn(request):
-    
-    if request.method=='POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    try:
+        if request.method=='POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        user_authentication = authenticate(request,username=username, password=password)
-        if user_authentication:
-            login(request, user_authentication)
-            return redirect('/home')
-        else:
-            messages.warning(request, 'Invalid username or password')
+            user_authentication = authenticate(request,username=username, password=password)
+            if user_authentication:
+                login(request, user_authentication)
+                return redirect('/home')
+            else:
+                messages.warning(request, 'Invalid username or password')
 
-    return render(request,'signin.html')
+        return render(request,'signin.html')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/index')
 
 def signout(request):
-    logout(request)
-    return redirect('/')
+    try:
+        logout(request)
+        return redirect('/')
+    except:
+        messages.warning(request, 'Action unsucessful')
+        return redirect('/index')
 
 @login_required(login_url='/signin')
 def personal_messages(request,friend_username):
