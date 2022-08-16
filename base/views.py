@@ -132,7 +132,7 @@ def delete_personal_message(request,message_id):
     except:
         messages.warning(request, 'Action unsucessful')
         return redirect('/home')
-    
+
 def add_friend(request,friend_username):
     try:
         user = Profiles.objects.get(name=request.user.username)
@@ -226,6 +226,7 @@ def delete_group_message(request,message_id):
         messages.warning(request, 'Action unsucessful')
         return redirect('/home')
 
+@login_required(login_url='/signin')
 def delete_group(request,group_id):
     try:
         user = Profiles.objects.get(id=request.user.id)
@@ -238,6 +239,7 @@ def delete_group(request,group_id):
         messages.warning(request, 'Action unsucessful')
         return redirect('/home')
 
+@login_required(login_url='/signin')
 def join_group(request,group_id):
     try:
         user = Profiles.objects.get(name=request.user.username)
@@ -248,6 +250,7 @@ def join_group(request,group_id):
         messages.warning(request, 'Action unsucessful')
         return redirect('/home')
 
+@login_required(login_url='/signin')
 def leave_group(request,group_id):
     try:
         user = Profiles.objects.get(name=request.user.username)
@@ -365,6 +368,8 @@ def snapshots(request):
 
     return render(request,'snapshots.html')
 
+
+@login_required(login_url='/signin')
 def delete_account(request):
 
     user = User.objects.get(id=request.user.id)
