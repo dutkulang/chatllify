@@ -30,7 +30,7 @@ app :
 
 git clone repo--
 
-pit install -r requirements.txt
+pip install -r requirements.txt
 
 #### ![Screenshot (148)](https://user-images.githubusercontent.com/73120937/184893216-66e09eff-4ad2-4a16-b8ac-5e75eb159d99.png)
 
